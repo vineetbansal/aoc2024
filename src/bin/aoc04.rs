@@ -17,6 +17,30 @@ fn find(grid: &str, grid_size: (i16, i16), needle: &str, pos: (i16, i16), dxdy: 
     }
 }
 
+fn find_x(grid: &str) -> u16 {
+    let n_rows = grid.lines().count() as i16;
+    let n_cols = grid.lines().nth(0).unwrap().len() as i16;
+    let mut n_results: u16 = 0;
+
+    for i in 0..n_rows {
+        for j in 0..n_cols {
+            let mut found_mas = find(grid, (n_rows, n_cols), "MAS", (i, j), (1, 1));
+            let mut found_sam = find(grid, (n_rows, n_cols), "SAM", (i, j), (1, 1));
+            let arm1_found = found_mas || found_sam;
+
+            found_mas = find(grid, (n_rows, n_cols), "MAS", (i, j+2), (1, -1));
+            found_sam = find(grid, (n_rows, n_cols), "SAM", (i, j+2), (1, -1));
+            let arm2_found = found_mas || found_sam;
+
+            if arm1_found && arm2_found {
+                n_results += 1;
+            }
+
+        }
+    }
+    n_results
+}
+
 fn find_words(grid: &str, needle: &str) -> u16 {
 
     let mut dxdy: Vec<(i16, i16)> = vec![];
@@ -46,8 +70,10 @@ fn find_words(grid: &str, needle: &str) -> u16 {
 
 fn main() {
     let grid = fs::read_to_string("input4_1.txt").unwrap();
-    let n = find_words(grid.as_str(), "XMAS");
-    print!("{:?}", n);
+    let result_a = find_words(grid.as_str(), "XMAS");
+    print!("{:?}\n", result_a);
+    let result_b = find_x(grid.as_str());
+    print!("{:?}\n", result_b);
 }
 
 #[cfg(test)]
@@ -69,5 +95,23 @@ MAMMMXMMMM
 MXMXAXMASX";
         let result = find_words(input, "XMAS");
         assert_eq!(result, 18);
+    }
+
+    #[test]
+    fn it_works2() {
+
+        let input: &str = "\
+MMMSXXMASM
+MSAMXMSMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX";
+        let result = find_x(input);
+        assert_eq!(result, 9);
     }
 }
