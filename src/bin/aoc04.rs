@@ -1,5 +1,4 @@
 use std::fs;
-use std::cmp;
 
 fn find(grid: &str, grid_size: (i16, i16), needle: &str, pos: (i16, i16), dxdy: (i16, i16)) -> bool {
     let mut i: i16 = 0;
