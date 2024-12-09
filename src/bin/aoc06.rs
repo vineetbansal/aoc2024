@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use rayon::prelude::*;
 
 
-fn travel(grid: &str, grid_size: (i16, i16), mut pos: (i16, i16), mut dxdy: (i16, i16), block_pos: Option<(i16, i16)>) -> u16 {
+fn travel(grid: &str, grid_size: (i16, i16), mut pos: (i16, i16), mut dxdy: (i16, i16), block_pos: Option<(i16, i16)>) -> Option<HashSet<(i16, i16)>> {
     let mut visited: HashSet<(i16, i16)> = HashSet::new();
 
     // Garbage algo but might work in parallel
@@ -22,7 +22,7 @@ fn travel(grid: &str, grid_size: (i16, i16), mut pos: (i16, i16), mut dxdy: (i16
             dxdy = (dxdy.1, -dxdy.0);
             if dxdy.0 == -1 && dxdy.1 == 0 {
                 if (up_blockers.iter().any(|&up_blocker| up_blocker == (x, y))) {
-                    return 0;
+                    return None;
                 } else {
                     up_blockers.push((x, y));
                 }
@@ -34,7 +34,7 @@ fn travel(grid: &str, grid_size: (i16, i16), mut pos: (i16, i16), mut dxdy: (i16
                         dxdy = (dxdy.1, -dxdy.0);
                         if dxdy.0 == -1 && dxdy.1 == 0 {
                             if up_blockers.iter().any(|&up_blocker| up_blocker == (x, y)) {
-                                return 0;
+                                return None;
                             } else {
                                 up_blockers.push((x, y));
                             }
@@ -51,11 +51,11 @@ fn travel(grid: &str, grid_size: (i16, i16), mut pos: (i16, i16), mut dxdy: (i16
         steps += 1;
     }
 
-    visited.len() as u16
+    Some(visited)
 }
 
 
-fn visited_positions(grid: &str) -> u16 {
+fn visited_positions(grid: &str) -> Option<HashSet<(i16, i16)>> {
 
     let n_rows = grid.lines().count() as i16;
     let n_cols = grid.lines().nth(0).unwrap().len() as i16;
@@ -92,16 +92,14 @@ fn find_blocking_positions(grid: &str) -> i16 {
         }
     }
 
-    let rows: Vec<i16> = (0..n_rows).collect();
-    let result = rows.par_iter().map(
-        |&row| {
+    let positions = visited_positions(grid).unwrap();
+
+    let result = positions.par_iter().map(
+        |&position| {
             let mut result: i16 = 0;
-            for col in 0..n_cols {
-                let blocking_pos = (row, col);
-                let n_steps = travel(grid, (n_rows, n_cols), pos, dxdy, Some(blocking_pos));
-                if n_steps == 0 {
-                    result += 1;
-                }
+            let visited = travel(grid, (n_rows, n_cols), pos, dxdy, Some(position));
+            if visited == None {
+                result += 1;
             }
             result
         }
@@ -133,7 +131,7 @@ mod tests {
 #.........
 ......#...";
         let result = visited_positions(input);
-        assert_eq!(result, 41);
+        assert_eq!(result.unwrap().len(), 41);
     }
 
     #[test]
