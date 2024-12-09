@@ -7,9 +7,7 @@ fn travel(grid: &str, grid_size: (i16, i16), mut pos: (i16, i16), mut dxdy: (i16
     let mut visited: HashSet<(i16, i16)> = HashSet::new();
 
     // Garbage algo but might work in parallel
-    // The blocker positions at which I was forced to change direction to 'up'
-    // If I encounter these again, I know I'm stuck.
-    let mut up_blockers: Vec<(i16, i16)> = vec![];
+    let mut visited_pos_dir: Vec<((i16, i16), (i16, i16))> = vec![];
 
     let mut steps: i16 = 0;
     loop {
@@ -20,25 +18,11 @@ fn travel(grid: &str, grid_size: (i16, i16), mut pos: (i16, i16), mut dxdy: (i16
             break;
         } else if grid.lines().nth(x as usize).unwrap().chars().nth(y as usize).unwrap() == '#' {
             dxdy = (dxdy.1, -dxdy.0);
-            if dxdy.0 == -1 && dxdy.1 == 0 {
-                if (up_blockers.iter().any(|&up_blocker| up_blocker == (x, y))) {
-                    return None;
-                } else {
-                    up_blockers.push((x, y));
-                }
-            }
         } else {
             match block_pos {
                 Some(block_pos_) => {
                     if block_pos_.0 == x && block_pos_.1 == y {
                         dxdy = (dxdy.1, -dxdy.0);
-                        if dxdy.0 == -1 && dxdy.1 == 0 {
-                            if up_blockers.iter().any(|&up_blocker| up_blocker == (x, y)) {
-                                return None;
-                            } else {
-                                up_blockers.push((x, y));
-                            }
-                        }
                     } else {
                         pos = (x, y);
                     }
@@ -47,6 +31,13 @@ fn travel(grid: &str, grid_size: (i16, i16), mut pos: (i16, i16), mut dxdy: (i16
                     pos = (x, y);
                 }
             }
+        }
+
+        // deja vu? I'm stuck
+        if visited_pos_dir.contains(&(pos, dxdy)) {
+            return None;
+        } else {
+            visited_pos_dir.push((pos, dxdy));
         }
         steps += 1;
     }
