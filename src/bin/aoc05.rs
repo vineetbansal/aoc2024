@@ -48,7 +48,7 @@ impl fmt::Debug for MyOrderable<'_> {
     }
 }
 
-// Applies to MyOrderables that qualify for comparison
+// Applies to MyOrderables that *do* qualify for comparison
 impl Ord for MyOrderable<'_> {
     fn cmp(&self, other: &Self) -> Ordering {
         if self.ordering.lt.get(&self.x).map_or(false, |values| values.contains(&other.x)) {
@@ -61,10 +61,12 @@ impl Ord for MyOrderable<'_> {
     }
 }
 
-// We're saying that any MyOrderable can be compared to any other MyOrderable
 impl PartialOrd<Self> for MyOrderable<'_> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))  // use `cmp` from `Ord`
+        // use `cmp` from `Ord`
+        // We're saying that any MyOrderable can be compared to any other MyOrderable, without
+        // exception
+        Some(self.cmp(other))
     }
 }
 
