@@ -1,7 +1,7 @@
 use std::fs;
 
 
-// #[f64] is a slice instead of Vec<f64> which is a full vector
+// &[f64] is a slice instead of Vec<f64> which is a full vector
 fn try_op(numbers: &[f64], desired_result: f64, allow_concat: bool) -> (Vec<&str>, bool) {
     if numbers.len() == 1 {
         if numbers[0] == desired_result {
@@ -14,6 +14,7 @@ fn try_op(numbers: &[f64], desired_result: f64, allow_concat: bool) -> (Vec<&str
     let last_number: f64 = *numbers.last().unwrap();
 
     // Really should be doing this iterating over an Enum, rather than independent blocks
+
     // Try *
     let (subvec, found) = try_op(&numbers[..numbers.len()-1], desired_result / last_number, allow_concat);
     if found {
