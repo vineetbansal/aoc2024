@@ -1,5 +1,4 @@
 use std::fmt;
-use std::fs;
 use std::cmp::{Ordering, PartialOrd, PartialEq, Eq};
 use std::collections::HashMap;
 
@@ -107,10 +106,16 @@ fn part_a_b(string: &str) -> (i16, i16) {
     (result_a, result_b)
 }
 
+fn solution_a(input: &str) -> i16 {
+    part_a_b(input).0
+}
+
+fn solution_b(input: &str) -> i16 {
+    part_a_b(input).1
+}
+
 fn main() {
-    let content = fs::read_to_string("input5_1.txt").expect("Could not read file");
-    let result = part_a_b(content.as_str());
-    print!("{:?}", result);
+    aoc2024::run("05", solution_a, solution_b)
 }
 
 #[cfg(test)]

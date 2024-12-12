@@ -1,4 +1,3 @@
-use std::fs;
 use std::collections::HashSet;
 use rayon::prelude::*;
 
@@ -98,10 +97,17 @@ fn find_blocking_positions(grid: &str) -> i16 {
     result
 }
 
+fn solution_a(input: &str) -> i16 {
+    let result = visited_positions(input);
+    result.unwrap().len() as i16
+}
+
+fn solution_b(input: &str) -> i16 {
+    find_blocking_positions(input)
+}
+
 fn main() {
-    let grid = fs::read_to_string("input6_1.txt").unwrap();
-    let result = find_blocking_positions(grid.as_str());
-    print!("{:?}", result);
+    aoc2024::run("06", solution_a, solution_b)
 }
 
 #[cfg(test)]

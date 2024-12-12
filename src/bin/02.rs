@@ -1,6 +1,3 @@
-use std::fs;
-
-
 fn is_safe(levels: &Vec<i32>) -> bool {
     let diff = levels[1] - levels[0];
     let direction: i32 = if diff > 0 {1} else {-1};
@@ -12,12 +9,9 @@ fn is_safe(levels: &Vec<i32>) -> bool {
     true
 }
 
-
-fn main() {
-    let allow_bad_level: bool = true;  // problem a or b
-    let document = fs::read_to_string("input2_1.txt").unwrap();
+fn get_safe_reports(input: &str, allow_bad_level: bool) -> u32 {
     let mut safe_reports: u32 = 0;
-    for line in document.lines() {
+    for line in input.lines() {
         let levels: Vec<i32> = line.split(" ").map(|s| s.parse::<i32>().unwrap()).collect();
         let mut safe: bool = is_safe(&levels);
         if !safe && allow_bad_level {
@@ -31,6 +25,19 @@ fn main() {
         }
         safe_reports += safe as u32;
     }
-
-    print!("{:?}", safe_reports);
+    safe_reports
 }
+
+fn solution_a(input: &str) -> u32 {
+    get_safe_reports(input, false)
+}
+
+fn solution_b(input: &str) -> u32 {
+    get_safe_reports(input, true)
+}
+
+fn main() {
+    aoc2024::run("02", solution_a, solution_b);
+}
+
+

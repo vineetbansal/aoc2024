@@ -1,6 +1,3 @@
-use std::fs;
-
-
 // &[f64] is a slice instead of Vec<f64> which is a full vector
 fn try_op(numbers: &[f64], desired_result: f64, allow_concat: bool) -> (Vec<&str>, bool) {
     if numbers.len() == 1 {
@@ -66,10 +63,16 @@ fn calibrate(string: &str, allow_concat: bool) -> i64 {
     final_result as i64
 }
 
+fn solution_a(input: &str) -> i64 {
+    calibrate(input, false)
+}
+
+fn solution_b(input: &str) -> i64 {
+    calibrate(input, true)
+}
+
 fn main() {
-    let string = fs::read_to_string("input7_1.txt").unwrap();
-    let result = calibrate(string.as_str(), true);
-    print!("{:?}", result);
+    aoc2024::run("07", solution_a, solution_b);
 }
 
 #[cfg(test)]

@@ -47,12 +47,16 @@ fn preprocess(s: &str) -> String {
     result
 }
 
-fn main() {
-    let document = fs::read_to_string("input3_1.txt").unwrap();
-    // let result = mult_result(&document);
-    let result = mult_result(preprocess(&document).as_str());
-    print!("{:?}", result);
+fn solution_a(input: &str) -> u32 {
+    mult_result(input)
+}
 
+fn solution_b(input: &str) -> u32 {
+    mult_result(preprocess(input).as_str())
+}
+
+fn main() {
+    aoc2024::run("03", solution_a, solution_b);
 }
 
 #[cfg(test)]

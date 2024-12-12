@@ -67,12 +67,16 @@ fn find_words(grid: &str, needle: &str) -> u16 {
     n_results
 }
 
+fn solution_a(input: &str) -> u16 {
+    find_words(input, "XMAS")
+}
+
+fn solution_b(input: &str) -> u16 {
+    find_x(input)
+}
+
 fn main() {
-    let grid = fs::read_to_string("input4_1.txt").unwrap();
-    let result_a = find_words(grid.as_str(), "XMAS");
-    print!("{:?}\n", result_a);
-    let result_b = find_x(grid.as_str());
-    print!("{:?}\n", result_b);
+    aoc2024::run("04", solution_a, solution_b);
 }
 
 #[cfg(test)]
