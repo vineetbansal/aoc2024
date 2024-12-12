@@ -16,15 +16,15 @@ fn try_op(numbers: &[f64], desired_result: f64, allow_concat: bool) -> (Vec<&str
     // Really should be doing this iterating over an Enum, rather than independent blocks
 
     // Try *
-    let (subvec, found) = try_op(&numbers[..numbers.len()-1], desired_result / last_number, allow_concat);
+    let (ops, found) = try_op(&numbers[..numbers.len()-1], desired_result / last_number, allow_concat);
     if found {
-        return ([subvec, vec!["*"]].concat(), true);
+        return ([ops, vec!["*"]].concat(), true);
     }
 
     // Try +
-    let (subvec, found) = try_op(&numbers[..numbers.len()-1], desired_result - last_number, allow_concat);
+    let (ops, found) = try_op(&numbers[..numbers.len()-1], desired_result - last_number, allow_concat);
     if found {
-        return ([subvec, vec!["+"]].concat(), true);
+        return ([ops, vec!["+"]].concat(), true);
     }
 
     // Try ||
@@ -35,15 +35,15 @@ fn try_op(numbers: &[f64], desired_result: f64, allow_concat: bool) -> (Vec<&str
             let prefix: i64 = desired_result_str[0..i].to_string().parse::<i64>().unwrap_or(0);
             let suffix: i64 = desired_result_str[i..].to_string().parse::<i64>().unwrap_or(0);
             if numbers[0] as i64 == prefix {
-                let (subvec, found) = try_op(&numbers[1..], suffix as f64, allow_concat);
+                let (ops, found) = try_op(&numbers[1..], suffix as f64, allow_concat);
                 if found {
-                    return ([subvec, vec!["||"]].concat(), true);
+                    return ([ops, vec!["||"]].concat(), true);
                 }
             }
             if numbers[numbers.len()-1] as i64 == suffix {
-                let (subvec, found) = try_op(&numbers[..numbers.len()-1], prefix as f64, allow_concat);
+                let (ops, found) = try_op(&numbers[..numbers.len()-1], prefix as f64, allow_concat);
                 if found {
-                    return ([subvec, vec!["||"]].concat(), true);
+                    return ([ops, vec!["||"]].concat(), true);
                 }
             }
         }

@@ -1,0 +1,2 @@
+[alias]
+day = "run --release --bin"
