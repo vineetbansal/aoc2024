@@ -20,14 +20,14 @@ where
     let sol_a_time = Instant::now();
     let solution_a = solution_a(&input);
     let sol_a_time = sol_a_time.elapsed().as_secs_f64() * 1000.0;
-    println!("Solution A: {solution_a} ({sol_a_time:.3}ms)");
+    println!("Day {name} Solution A: {solution_a} ({sol_a_time:.3}ms)");
 
     let sol_b_time = Instant::now();
     let solution_b = solution_b(&input);
     let sol_b_time = sol_b_time.elapsed().as_secs_f64() * 1000.0;
-    println!("Solution B: {solution_b} ({sol_b_time:.3}ms)");
+    println!("Day {name} Solution B: {solution_b} ({sol_b_time:.3}ms)");
 
     let time_taken = now.elapsed().as_secs_f64() * 1000.0;
 
-    println!("Time taken: {time_taken:.3}ms");
+    println!("Day {name} Time taken: {time_taken:.3}ms");
 }
